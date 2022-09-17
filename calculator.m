@@ -4,21 +4,50 @@
 % -------------------------------------------------------------------
                                      
 
-hit         = 2;    % Желаемый удар в ноги, в метрах высоты
-angle       = 45;   % Угол вылет в градусах
-speed       = 10;   % Скорость в м/с на кроке вылета
+angle       = 45;             	% Угол вылет в градусах
+hits        = [1,0,1];       	% Желаемый удар в ноги, в метрах высоты
+speeds     	= [9.2,10,10.8];	% Скорость в м/с на кроке вылета
+starts      = [6,0,10];       	% X начиная с которого отрисовывать углы
 
 
 G               = 9.807;            % Ускорение свободного падения
-hitSpeed        = sqrt(2*G*hit);    % Скорость по нормали к приземлению, даёт ощущение удара
-
 angleRad        = angle*pi/180;
-verticalSpeed   = speed*sin(angleRad);  % Начальная вертикальная скорость
-horizontalSpeed = speed*cos(angleRad);  % Начальная горизонтальная скорость
 
-res     = sim('single_flight');
+hold on
+for n = 1:length(speeds)
 
-plot(res.X.Data,res.Y.Data);
+    speed  	= speeds(n);
+    hit     = hits(n);
+    start   = starts(n) ;
 
-line([0,1],[0.5,0.5],'linestyle','-','color','r'); % TODO: Превратить в нормальную отрисовку углов
-line([2.5,3.5],[2,2],'linestyle','-','color','r');
+    hitSpeed        = sqrt(2*G*hit);        % Скорость по нормали к приземлению, даёт ощущение удара
+    verticalSpeed   = speed*sin(angleRad);  % Начальная вертикальная скорость
+    horizontalSpeed = speed*cos(angleRad);  % Начальная горизонтальная скорость
+
+    res     = sim('single_flight');
+
+    Xs      = res.X.Data;
+    Ys      = res.Y.Data;
+    Angles  = res.angle.Data;
+
+    plot(Xs,Ys);
+
+    step    = 0.4;  % даннные для отрисовки
+    len     = 2;
+    if hit > 0
+        for i=1:length(Xs)
+            if Xs(i)>start
+                x1  = Xs(i) - cos(Angles(i))*len/2;
+                x2  = Xs(i) + cos(Angles(i))*len/2;
+                y1  = Ys(i) - sin(Angles(i))*len/2;
+                y2  = Ys(i) + sin(Angles(i))*len/2;
+
+                line([x1,x2],[y1,y2],'linestyle','-','color','r');
+
+                start   = start + step;
+            end
+        end
+    end
+end
+axis image
+hold off
