@@ -1,7 +1,7 @@
 
-angle       = 30;          	% Угол вылета в градусах
+angle       = 60;          	% Угол вылета в градусах
 hit         = 0.5;       	% Желаемый удар в ноги, в метрах высоты
-speed      	= 7;            % Скорость в м/с на кроке вылета
+speed      	= 80;           % Скорость в км/ч на кроке вылета
 centerHeigt = 1;            % Высота центра тяжести от покрытия
 
 G               = 9.807;            % Ускорение свободного падения
@@ -11,6 +11,7 @@ angleRad        = angle*pi/180;
 
 
 hitSpeed        = sqrt(2*G*hit);        % Скорость по нормали к приземлению, даёт ощущение удара
+speed           = speed/3.6;
 verticalSpeed   = speed*sin(angleRad);  % Начальная вертикальная скорость
 horizontalSpeed = speed*cos(angleRad);  % Начальная горизонтальная скорость
 
@@ -22,17 +23,61 @@ realXs	= res.realX.Data;
 realYs 	= res.realY.Data;
 speeds  = res.speed.Data;
 
-tiledlayout(2,1);
+t               = tiledlayout(3,4);
+t.TileSpacing	= 'compact';
+t.Padding       = 'compact';
 
-nexttile
+nexttile(2,[2 3]);
 plot(Xs,Ys,'b:');
 hold on
-plot(realXs,realYs,'b-');
+plot(realXs,realYs,'b-')
 axis image
+                                        % здесь делаю padding для графика
+rangeX  = max(max(Xs),max(realXs)) - min(min(Xs),min(realXs));
+rangeY  = max(max(Ys),max(realYs)) - min(min(Ys),min(realYs));
+padding = max(rangeX,rangeY)*0.07;
+yl      = ylim();
+xl      = xlim();
+xl      = [xl(1)-padding,xl(2)+padding];
+ylim([yl(1)-padding,yl(2)+padding]);
+xlim(xl);
+
+legend({'Центр тяжести','Подошва'},'Location','northeast')
+xlabel('Дистанция(м)')
+ylabel('Высота(м)')
 hold off
 title('Геометрия полёта');
 
 speeds  = speeds*3.6; % переводим в км/ч
-nexttile
-plot(realXs,speeds,'b-');
-title('Скорость полёта');
+nexttile(10,[1 3])
+yyaxis left
+plot(realXs,speeds);
+
+rangeY  = max(max(speeds),max(speeds)) - min(min(speeds),min(speeds));
+padding = rangeY*0.07;
+yl      = ylim();
+yl      = [yl(1)-padding,yl(2)+padding];
+ylim(yl);
+xlim(xl);
+
+xlabel('Дистанция(м)')
+ylabel('Скорость(км/ч)')
+
+
+yyaxis right
+hold on
+plot(realXs,res.tout);
+hold off
+ylabel('Время(сек)')
+title('Параметры полёта');
+legend({'Скорость','Время'},'Location','southeast')
+
+nexttile(9)
+Ys  = linspace(yl(1),yl(2),50);
+Xs  = ((Ys/3.6).^2)/(2*G);
+plot(Xs,Ys);
+ylim(yl);
+xlim([min(Xs),max(Xs)]);
+xlabel('Высота(м)')
+ylabel('Скорость(км/ч)')
+title('Эквивалентная высота');
