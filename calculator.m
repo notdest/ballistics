@@ -6,30 +6,29 @@
 
 angle       = 45;             	% Угол вылет в градусах
 hits        = [1,0,1];       	% Желаемый удар в ноги, в метрах высоты
-speeds     	= [9.2,10,10.8];	% Скорость в м/с на кроке вылета
+StartSpeeds = [9.2,10,10.8];	% Скорость в м/с на кроке вылета
 starts      = [6,0,10];       	% X начиная с которого отрисовывать углы
 centerHeigt = 1;            % Высота центра тяжести от покрытия
 
 
-G               = 9.807;            % Ускорение свободного падения
-angleRad        = angle*pi/180;
+G        	= 9.807;            % Ускорение свободного падения
+angle    	= angle*pi/180;
 
 hold on
-for n = 1:length(speeds)
+for n = 1:length(StartSpeeds)
 
-    speed  	= speeds(n);
+    speed  	= StartSpeeds(n);
     hit     = hits(n);
     start   = starts(n) ;
 
-    hitSpeed        = sqrt(2*G*hit);        % Скорость по нормали к приземлению, даёт ощущение удара
-    verticalSpeed   = speed*sin(angleRad);  % Начальная вертикальная скорость
-    horizontalSpeed = speed*cos(angleRad);  % Начальная горизонтальная скорость
+    hitSpeed	= sqrt(2*G*hit);        % Скорость по нормали к приземлению, даёт ощущение удара
 
     res     = sim('single_flight');
 
     Xs      = res.X.Data;
     Ys      = res.Y.Data;
-    Angles  = res.angle.Data;
+    angles  = res.angle.Data;
+    speeds  = res.speed.Data;
 
     plot(Xs,Ys);
 
@@ -38,10 +37,11 @@ for n = 1:length(speeds)
     if hit > 0
         for i=1:length(Xs)
             if Xs(i)>start
-                x1  = Xs(i) - cos(Angles(i))*len/2;
-                x2  = Xs(i) + cos(Angles(i))*len/2;
-                y1  = Ys(i) - sin(Angles(i))*len/2;
-                y2  = Ys(i) + sin(Angles(i))*len/2;
+                ang = asin(hitSpeed/speeds(i)) + angles(i);
+                x1  = Xs(i) - cos(ang)*len/2;
+                x2  = Xs(i) + cos(ang)*len/2;
+                y1  = Ys(i) - sin(ang)*len/2;
+                y2  = Ys(i) + sin(ang)*len/2;
 
                 line([x1,x2],[y1,y2],'linestyle','-','color','r');
 

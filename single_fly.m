@@ -1,21 +1,13 @@
 
 angle       = 60;          	% Угол вылета в градусах
-hit         = 0.5;       	% Желаемый удар в ноги, в метрах высоты
 speed      	= 80;           % Скорость в км/ч на кроке вылета
 centerHeigt = 1;            % Высота центра тяжести от покрытия
 
-G               = 9.807;            % Ускорение свободного падения
-angleRad        = angle*pi/180;
+G         	= 9.807;
+angle       = angle*pi/180;
+speed    	= speed/3.6;
 
-
-
-
-hitSpeed        = sqrt(2*G*hit);        % Скорость по нормали к приземлению, даёт ощущение удара
-speed           = speed/3.6;
-verticalSpeed   = speed*sin(angleRad);  % Начальная вертикальная скорость
-horizontalSpeed = speed*cos(angleRad);  % Начальная горизонтальная скорость
-
-res     = sim('single_flight');
+res     = sim('single_flight');         % Запуск модели
 
 Xs      = res.X.Data;
 Ys      = res.Y.Data;
@@ -23,7 +15,7 @@ realXs	= res.realX.Data;
 realYs 	= res.realY.Data;
 speeds  = res.speed.Data;
 
-t               = tiledlayout(3,4);
+t               = tiledlayout(3,4);     % Далее отрисовка графиков
 t.TileSpacing	= 'compact';
 t.Padding       = 'compact';
 
