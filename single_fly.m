@@ -7,7 +7,7 @@ G         	= 9.807;
 angle       = angle*pi/180;
 speed    	= speed/3.6;
 
-res     = sim('single_flight');         % Запуск модели
+res     = sim('flight_model');       	% Запуск модели
 
 Xs      = res.X.Data;
 Ys      = res.Y.Data;

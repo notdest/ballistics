@@ -23,7 +23,7 @@ for n = 1:length(StartSpeeds)
 
     hitSpeed	= sqrt(2*G*hit);        % Скорость по нормали к приземлению, даёт ощущение удара
 
-    res     = sim('single_flight');
+    res     = sim('flight_model');
 
     Xs      = res.X.Data;
     Ys      = res.Y.Data;
