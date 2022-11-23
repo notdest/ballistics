@@ -9,7 +9,10 @@ angle       = 45;             	% ”гол вылет в градусах
 hits        = [1,0.4,1];       	% ∆елаемый удар в ноги, в метрах высоты
 StartSpeeds = [9.2,10,10.8];	% —корость в м/с на кроке вылета
 starts      = [6,8,10];       	% X начина€ с которого отрисовывать углы
-centerHeigt = 1;            % ¬ысота центра т€жести от покрыти€
+centerHeigt = 1;                % ¬ысота центра т€жести от покрыти€
+
+lastX       = 1000;             % ѕосле этой дистанции модель останавливаетс€
+lastY       = -1;               % Ќиже этой высоты модель останавливаетс€
 
 
 G        	= 9.807;            % ”скорение свободного падени€
@@ -26,8 +29,8 @@ for n = 1:length(StartSpeeds)
 
     res     = sim('flight_model');
 
-    Xs      = res.X.Data;
-    Ys      = res.Y.Data;
+    Xs      = res.realX.Data;
+    Ys      = res.realY.Data;
     angles  = res.angle.Data;
     speeds  = res.speed.Data;
 
