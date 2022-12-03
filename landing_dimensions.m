@@ -10,7 +10,7 @@ centerHeigt = 1;                % Высота центра тяжести от покрытия, м
 
 lastX       = 1000;             % После этой дистанции модель останавливается
 lastY       = -2;               % Ниже этой высоты модель останавливается
-drawLen     = 2.4;                % Сколько последних метров полёта рисуем углы
+drawLen     = 2.4;              % Сколько последних метров полёта рисуем углы
 drawStep    = 0.4;              % С каким шагом рисуем углы
 aerodynamic = aerodynamic_coefficient();
 
@@ -47,7 +47,7 @@ for n = 1:length(StartSpeeds)
         for i=1:length(Xs)
             if Xs(i)>start
                 ang = asin(hitSpeed/speeds(i)) + angles(i);
-                draw_angle(Xs(i),Ys(i),ang);
+                draw_angle_text(Xs(i),Ys(i),ang);
 
                 start   = start + drawStep;
             end
