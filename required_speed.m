@@ -51,7 +51,7 @@ for i = 1:500
         speed   = speed + step;
     end
 end
-fprintf('\nТребуемая скорость %.1f км/ч\n',speed*3.6)
+fprintf('\nТребуемая скорость: %.1f км/ч\n',speed*3.6)
 
 %------------------------------------------------------------------------
 %---------------------- Отрисовку попирую из flight_details.m -----------
@@ -60,6 +60,14 @@ Ys      = res.Y.Data;
 realXs  = res.realX.Data;
 realYs  = res.realY.Data;
 speeds  = res.speed.Data;
+angles  = res.angle.Data;
+
+
+landingAngle = landingAngle*pi/180;
+hitSpeed     = (2/(3-cos(landingAngle)))*speeds(end)*sin(-angles(end)-landingAngle);
+hit          = (hitSpeed^2)/(2*G);
+fprintf('Удар в ноги: %.1f м\n',hit)
+
 
 t               = tiledlayout(3,4);
 t.TileSpacing   = 'compact';
@@ -69,7 +77,7 @@ nexttile(2,[2 3]);
 plot(Xs,Ys,'b:');
 hold on
 plot(realXs,realYs,'b-')
-draw_angle(landingDistance,landingLevel,-landingAngle*pi/180); % Отрисовка приземления
+draw_angle(landingDistance,landingLevel,-landingAngle); % Отрисовка приземления
 axis image
                                         % здесь делаю padding для графика
 rangeX  = max(max(Xs),max(realXs)) - min(min(Xs),min(realXs));
