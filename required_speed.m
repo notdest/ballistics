@@ -8,18 +8,19 @@ rampHeight      = 2;          	% Высота кромки вылета над основанием, где измеря
 landingLevel    = -1;           % Высота точки приземления относительно точки вылета, метры
                                 % Отрицательно если ниже
 
+cHeigt          = 1;        	% Высота центра тяжести от покрытия
 
-centerHeigt = 1;            % Высота центра тяжести от покрытия
 
 G           = 9.807;
 angle       = rampAngle*pi/180;
-lastX       = landingDistance;
-lastY       = -50;
 aerodynamic	= aerodynamic_coefficient();
+centerHeigt = 0;% Потом отдельно вычисляют траекторию подошвы, поэтому так
+landingAngle = landingAngle*pi/180;
+lastX       = landingDistance+sin(angle)*cHeigt+sin(landingAngle)*cHeigt;
+lastY       = -50;
 
 speed   = 8;    % случайно взяли начальную скорость
 step    = 2;    % и какой-то шаг изменения
-
 
 direction   = 0;
 for i = 1:500
@@ -29,7 +30,7 @@ for i = 1:500
     Ys      = res.realY.Data;
     heihgt  = Ys(end);
 
-    if heihgt > landingLevel            % Смотрим в какую сторону ошиблись
+    if heihgt > (landingLevel-cos(angle)*cHeigt+cos(landingAngle)*cHeigt)% Смотрим в какую сторону ошиблись
         newDirection = 1;
     else
         newDirection = -1;
@@ -58,15 +59,20 @@ speed   = sqrt(speed^2 + 2*G*rampHeight);
 fprintf('Требуемая скорость у основания: %.1f км/ч\n',speed*3.6)
 %------------------------------------------------------------------------
 %---------------------- Отрисовку попирую из flight_details.m -----------
-Xs      = res.X.Data;
-Ys      = res.Y.Data;
-realXs  = res.realX.Data;
-realYs  = res.realY.Data;
+Xs      = res.X.Data - (sin(angle)*cHeigt);
+Ys      = res.Y.Data + (cos(angle)*cHeigt);
+realXs  = zeros(1,length(Xs));
+realYs  = zeros(1,length(Xs));
 speeds  = res.speed.Data;
 angles  = res.angle.Data;
 
+for i = 1:length(Xs)
+    curAngle    = angle +((Xs(i)-Xs(1))/(Xs(end)-Xs(1)))*(-landingAngle-angle);
+    realXs(i)   = Xs(i)+sin(curAngle)*cHeigt;
+    realYs(i)   = Ys(i)-cos(curAngle)*cHeigt;
+end
 
-landingAngle = landingAngle*pi/180;
+
 hitSpeed     = (2/(3-cos(landingAngle)))*speeds(end)*sin(-angles(end)-landingAngle);
 hit          = (hitSpeed^2)/(2*G);
 fprintf('Удар в ноги: %.1f м\n',hit)
