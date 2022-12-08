@@ -52,7 +52,7 @@ title('Геометрия полёта');
 speeds  = speeds*3.6; % переводим в км/ч
 nexttile(10,[1 3])
 yyaxis left
-plot(realXs,speeds);
+plot(Xs,speeds);
 
 rangeY  = max(max(speeds),max(speeds)) - min(min(speeds),min(speeds));
 padding = rangeY*0.07;
@@ -67,7 +67,7 @@ ylabel('Скорость(км/ч)')
 
 yyaxis right
 hold on
-plot(realXs,res.tout);
+plot(Xs,res.tout);
 hold off
 ylabel('Время(сек)')
 title('Параметры полёта');
