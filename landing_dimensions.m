@@ -33,13 +33,13 @@ for n = 1:length(StartSpeeds)
 
     res     = sim('flight_model');
 
-    Xs      = res.realX.Data;
-    Ys      = res.realY.Data;
+    Xs      = res.X.Data;
+    Ys      = res.Y.Data;
     angles  = res.angle.Data;
     speeds  = res.speed.Data;
     start   = Xs(end)- drawLen;
 
-    plot(Xs,Ys);
+    plot(Xs,Ys,':');
     if not(refreshed)
        refreshed = true;
        hold on
@@ -49,7 +49,7 @@ for n = 1:length(StartSpeeds)
         for i=1:length(Xs)
             if Xs(i)>start
                 ang = asin(hitSpeed/speeds(i)) + angles(i);
-                draw_angle_text(Xs(i),Ys(i),ang);
+                draw_angle_text(Xs(i),Ys(i),ang,centerHeigt);
 
                 start   = start + drawStep;
             end
@@ -57,6 +57,9 @@ for n = 1:length(StartSpeeds)
     end
 end
 axis image
+line([0,0],[0,-sin(angle)],'linestyle','-','color','r');    % Отрисовка вылета
+line([0,-cos(angle)],[-sin(angle),-sin(angle)],'linestyle','-','color','r');
+line([-cos(angle),0],[-sin(angle),0],'linestyle','-','color','r');
 
 xl      = xlim();
 yl      = ylim();
