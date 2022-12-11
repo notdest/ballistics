@@ -17,7 +17,7 @@ for i=1:limit
     res     = sim('flight_model');       	% Запуск модели
     length1 = res.realX.Data(end);
 
-    if length2>0
+    if length1>0
         Xs(i)	= length1;
     end
     

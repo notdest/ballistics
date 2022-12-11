@@ -2,8 +2,9 @@ addpath('includes');
 
 
 angle       = 70;          	% Угол вылета в градусах
-speed      	= 40;           % Скорость в км/ч на кроке вылета
+speed      	= 45;           % Скорость в км/ч у основания трамплина
 centerHeigt = 1;            % Высота центра тяжести от покрытия
+rampHeight  = 2;            % Высота кромки вылета над основанием, где измеряли скорость. метры
 
 lastX       = 1000;      	% После этой дистанции модель останавливается
 lastY       = -1;        	% Ниже этой высоты модель останавливается
@@ -13,6 +14,7 @@ aerodynamic = aerodynamic_coefficient();
 G         	= 9.807;
 angle       = angle*pi/180;
 speed    	= speed/3.6;
+speed       = sqrt(speed^2-2*G*rampHeight); % Падение скорости на трамплине
 
 res     = sim('flight_model');       	% Запуск модели
 
@@ -50,7 +52,7 @@ title('Геометрия полёта');
 speeds  = speeds*3.6; % переводим в км/ч
 nexttile(10,[1 3])
 yyaxis left
-plot(realXs,speeds);
+plot(Xs,speeds);
 
 rangeY  = max(max(speeds),max(speeds)) - min(min(speeds),min(speeds));
 padding = rangeY*0.07;
@@ -65,7 +67,7 @@ ylabel('Скорость(км/ч)')
 
 yyaxis right
 hold on
-plot(realXs,res.tout);
+plot(Xs,res.tout);
 hold off
 ylabel('Время(сек)')
 title('Параметры полёта');
