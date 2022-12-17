@@ -1,31 +1,31 @@
 addpath('includes');
 
 
-angle       = 70;          	% Угол вылета в градусах
-speed      	= 45;           % Скорость в км/ч у основания трамплина
+angle       = 70;           % Угол вылета в градусах
+speed       = 45;           % Скорость в км/ч у основания трамплина
 centerHeigt = 1;            % Высота центра тяжести от покрытия
 rampHeight  = 2;            % Высота кромки вылета над основанием, где измеряли скорость. метры
 
-lastX       = 1000;      	% После этой дистанции модель останавливается
-lastY       = -1;        	% Ниже этой высоты модель останавливается
+lastX       = 1000;         % После этой дистанции модель останавливается
+lastY       = -1;           % Ниже этой высоты модель останавливается
 aerodynamic = aerodynamic_coefficient();
 
 
-G         	= 9.807;
+G           = 9.807;
 angle       = angle*pi/180;
-speed    	= speed/3.6;
+speed       = speed/3.6;
 speed       = sqrt(speed^2-2*G*rampHeight); % Падение скорости на трамплине
 
-res     = sim('flight_model');       	% Запуск модели
+res     = sim('flight_model');          % Запуск модели
 
 Xs      = res.X.Data;
 Ys      = res.Y.Data;
-realXs	= res.realX.Data;
-realYs 	= res.realY.Data;
+realXs  = res.realX.Data;
+realYs  = res.realY.Data;
 speeds  = res.speed.Data;
 
 t               = tiledlayout(3,4);     % Далее отрисовка графиков
-t.TileSpacing	= 'compact';
+t.TileSpacing   = 'compact';
 t.Padding       = 'compact';
 
 nexttile(2,[2 3]);
