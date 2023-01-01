@@ -73,8 +73,8 @@ for i = 1:length(Xs)
 end
 
 
-hitSpeed     = (2/(3-cos(landingAngle)))*speeds(end)*sin(-angles(end)-landingAngle);
-hit          = (hitSpeed^2)/(2*G);
+hitSpeed     = speeds(end)*sin(-angles(end)-landingAngle);
+hit          = ((hitSpeed^2)/(2*G))*(2/(3-cos(landingAngle)));
 fprintf('”дар в ноги: %.1f м\n',hit)
 
 
